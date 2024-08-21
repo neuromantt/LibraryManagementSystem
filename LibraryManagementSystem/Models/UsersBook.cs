@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using LibraryManagementSystem.Data.Enum;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Principal;
 
 namespace LibraryManagementSystem.Models
@@ -6,7 +7,7 @@ namespace LibraryManagementSystem.Models
     public class UsersBook
     {
         public int Id { get; set; }
-        public int Status { get; set; }
+        public UsersBookStatus Status { get; set; } // InWishlist by default
         public string LendTo { get; set; }
         public DateTime AddingDate { get; set; }
         [ForeignKey("ReadingSession")]

@@ -10,7 +10,7 @@ namespace LibraryManagementSystem.Models
         public string Description { get; set; }
         public string Category { get; set; }
         public string Publisher { get; set; }
-        public DateTime PublishDate { get; set; }
+        public int PublishYear { get; set; }
         public string Image { get; set; }
         public DateTime DateCreated { get; set; } // now
         [ForeignKey("User")]
