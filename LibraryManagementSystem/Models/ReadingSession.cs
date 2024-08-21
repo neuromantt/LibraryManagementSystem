@@ -9,11 +9,8 @@ namespace LibraryManagementSystem.Models
         public int EndPage { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        [ForeignKey("Book")]
-        public int BookId { get; set; }
-        [ForeignKey("AppUser")]
-        public string UserId { get; set; }
-        public Book Book { get; set; }
-        public AppUser User { get; set; }
+        [ForeignKey("UsersBook")]
+        public int? UsersBookId { get; set; }
+        public UsersBook? UsersBook { get; set; }
     }
 }
