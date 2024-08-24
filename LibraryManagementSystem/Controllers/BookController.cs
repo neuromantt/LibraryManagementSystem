@@ -1,8 +1,10 @@
 using AutoMapper;
 using LibraryManagementSystem.Data;
 using LibraryManagementSystem.DTOs.Book;
+using LibraryManagementSystem.Interfaces;
 using LibraryManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
 
 namespace LibraryManagementSystem.Controllers
@@ -12,19 +14,30 @@ namespace LibraryManagementSystem.Controllers
         private readonly ILogger<BookController> _logger;
         private readonly ApplicationDBContext _context;
         private readonly IMapper _mapper;
+        private readonly IBookRepository _bookRepository;
 
-        public BookController(ILogger<BookController> logger, ApplicationDBContext context, IMapper mapper)
+        public BookController(ILogger<BookController> logger, ApplicationDBContext context, IMapper mapper, IBookRepository bookRepository)
         {
             _logger = logger;
             _context = context;
             _mapper = mapper;
+            _bookRepository = bookRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            IEnumerable<Book> books = _context.Books.Take(100).ToList();
+            IEnumerable<Book> books = null;
 
-            IEnumerable<BookMainInfoDto> ienumerableDest = _mapper.Map<IEnumerable<BookMainInfoDto>>(books);
+            if (searchString.IsNullOrEmpty())
+            {
+                books = await _bookRepository.GetAll();
+            }
+            else
+            {
+                books = await _bookRepository.SearchByTitleOrAuthor(searchString);
+            }
+
+            IEnumerable<BookMainInfoDto> booksMainInfo = _mapper.Map<IEnumerable<BookMainInfoDto>>(books);
 
             return View(books);
         }

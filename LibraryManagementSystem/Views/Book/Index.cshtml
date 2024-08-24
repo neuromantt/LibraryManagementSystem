@@ -4,22 +4,16 @@
     ViewData["Title"] = "Home Page";
 }
 
-
 <div class="container py-2">
-    <form id="form_search" name="form_search" method="get" action="" class="form-inline">
-        <div class="form-group">
-            <div class="input-group">
-                <input class="form-control me-3" placeholder="Search for..." type="text">
-                <div class="text-end">
-                    <button type="button" class="btn btn-primary">Search</button>
-                </div>
+    <form method="get" class="form-inline" asp-action="Index" asp-controller="Book">
+        <div class="input-group">
+            <input name="searchString" class="form-control me-3" placeholder="Search for..." type="search">
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary">Search</button>
             </div>
         </div>
     </form>
 </div>
-
-
-
 
 <div class="album py-2 bg-body-tertiary">
     <div class="container">
