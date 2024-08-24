@@ -1,10 +1,16 @@
 using LibraryManagementSystem.Data;
+using LibraryManagementSystem.Interfaces;
+using LibraryManagementSystem.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IAppUserRepository, AppUserRepository>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IReadingSessionRepository, ReadingSessionRepository>();
+builder.Services.AddScoped<IUsersBookRepository, UsersBookRepository>();
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

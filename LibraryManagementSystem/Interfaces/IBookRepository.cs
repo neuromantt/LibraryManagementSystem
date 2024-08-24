@@ -1,6 +1,6 @@
 ﻿using LibraryManagementSystem.Models;
 
-namespace LibraryManagementSystem.Repositories
+namespace LibraryManagementSystem.Interfaces
 {
     public interface IBookRepository : IGenericRepository<Book>
     {
