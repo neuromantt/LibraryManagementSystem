@@ -3,6 +3,7 @@ using LibraryManagementSystem.Data;
 using LibraryManagementSystem.DTOs.Book;
 using LibraryManagementSystem.Interfaces;
 using LibraryManagementSystem.Models;
+using LibraryManagementSystem.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
@@ -24,22 +25,35 @@ namespace LibraryManagementSystem.Controllers
             _bookRepository = bookRepository;
         }
 
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, int pageIndex = 1)
         {
             IEnumerable<Book> books = null;
+            const int pageSize = 30;
+            int totalBooks;
 
             if (searchString.IsNullOrEmpty())
             {
-                books = await _bookRepository.GetAll();
+                books = await _bookRepository.GetAllFromPageWithSize(pageIndex, pageSize);
+                totalBooks = await _bookRepository.CountAll();
             }
             else
             {
-                books = await _bookRepository.SearchByTitleOrAuthor(searchString);
+                books = await _bookRepository.GetAllSearchByTitleOrAuthorFromPageWithSize(searchString, pageIndex, pageSize);
+                totalBooks = await _bookRepository.CountAllSearchByTitleOrAuthor(searchString);
             }
 
             IEnumerable<BookMainInfoDto> booksMainInfo = _mapper.Map<IEnumerable<BookMainInfoDto>>(books);
 
-            return View(books);
+            var pager = new Pager(totalBooks, pageIndex, pageSize);
+
+            var booksViewModel = new ShowBooksViewModel()
+            {
+                Books = booksMainInfo,
+                SearchString = searchString,
+                Pager = pager
+            };
+
+            return View(booksViewModel);
         }
 
         public IActionResult Privacy()

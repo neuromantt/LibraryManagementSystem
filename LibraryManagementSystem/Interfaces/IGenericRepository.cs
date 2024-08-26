@@ -8,5 +8,6 @@
         Task<bool> Exists(int id);
         Task Update(T entity);
         Task Delete(T entity);
+        Task<int> CountAll();
     }
 }

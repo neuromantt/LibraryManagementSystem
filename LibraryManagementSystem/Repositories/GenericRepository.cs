@@ -20,6 +20,11 @@ namespace LibraryManagementSystem.Repositories
             return entity;
         }
 
+        public async Task<int> CountAll()
+        {
+            return await _dbContext.Set<T>().CountAsync();
+        }
+
         public async Task Delete(T entity)
         {
             _dbContext.Set<T>().Remove(entity);

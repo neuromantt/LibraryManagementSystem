@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Book>
+﻿@using LibraryManagementSystem.ViewModel
+@model ShowBooksViewModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -19,51 +20,72 @@
     <div class="container">
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-6 g-3">
-            @foreach (var item in Model)
+            @if (Model.Books != null && Model.Books.Any())
             {
-                <div class="col">
-                    <div class="card shadow-sm">
-                        @* <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg> *@
-                        <img class="bd-placeholder-img card-img-top" height="100%" src="@item.Image" alt="Thumbnail" role="img" aria-label="Placeholder: Thumbnail" />
-                        <div class="card-body">
-                            <p class="card-text">@item.Title</p>
-                            <p class="card-text">@item.Author</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                @foreach (var item in Model.Books!)
+                {
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            @* <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg> *@
+                            <img class="bd-placeholder-img card-img-top" height="100%" src="@item.Image" alt="Thumbnail" role="img" aria-label="Placeholder: Thumbnail" />
+                            <div class="card-body">
+                                <p class="card-text">@item.Title</p>
+                                <p class="card-text">@item.Author</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                                    </div>
+                                    <small class="text-body-secondary">9 mins</small>
                                 </div>
-                                <small class="text-body-secondary">9 mins</small>
                             </div>
                         </div>
                     </div>
+                }
+            }
+            else
+            {
+                <div class="d-flex justify-content-center align-items-center" style="width: 100%;">
+                    <h1 class="text-center">Can't find any book :(</h1>
                 </div>
-@*                 <div class="col">
-                    <div class="card shadow-sm">
-                        <img class="bd-placeholder-img card-img-top" height="225" src="@item.Image" alt="Thumbnail" role="img" aria-label="Placeholder: Thumbnail" />
-
-                        <div class="card-body">
-                            <p class="card-text">@item.Title</p>
-                            <p class="card-text">@item.Author</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a type="btn btn-success" asp-controller="Club" asp-action="Details" asp-route-id="@item.Id"
-                                       class="btn btn-sm btn-outline-secondary">View</a>
-                                    @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
-                                    {
-                                        <a type="btn btn-success" asp-controller="Race" asp-action="Edit" asp-route-id="@item.Id"
-                                           class="btn btn-sm btn-outline-secondary">Edit</a>
-                                        <a type="btn btn-success" asp-controller="Race" asp-action="Delete" asp-route-id="@item.Id"
-                                           class="btn btn-sm btn-outline-secondary">Delete</a>
-                                    }
-                                </div>
-                                <small class="text-body-secondary">@item.ClubCategory</small>
-                            </div>
-                        </div>
-                    </div>
-                </div> *@
             }
         </div>
+    </div>
+
+    <br />
+
+    <div class="container d-flex justify-content-center align-items-center">
+        @if (Model.Pager != null && Model.Pager.TotalPages > 0)
+        {
+            <ul class="pagination justify-content-end">
+                @if (Model.Pager.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Book" asp-action="index" asp-route-pageIndex="1" asp-route-searchString="@Model.SearchString"> 1 </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Book" asp-action="index" asp-route-pageIndex="@(Model.Pager.CurrentPage - 1)" asp-route-searchString="@Model.SearchString">&laquo;</a>
+                    </li>
+                }
+
+                @for (var currentPage = Model.Pager.StartPage; currentPage <= Model.Pager.EndPage; currentPage++)
+                {
+                    <li class="page-item @(currentPage == Model.Pager.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-controller="Book" asp-action="index" asp-route-pageIndex="@currentPage" asp-route-searchString="@Model.SearchString"> @currentPage </a>
+                    </li>
+                }
+
+                @if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Book" asp-action="index" asp-route-pageIndex="@(Model.Pager.CurrentPage + 1)" asp-route-searchString="@Model.SearchString">&raquo;</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Book" asp-action="index" asp-route-pageIndex="@Model.Pager.TotalPages" asp-route-searchString="@Model.SearchString"> @Model.Pager.TotalPages </a>
+                    </li>
+                }
+            </ul>
+        }
     </div>
 </div>
 
