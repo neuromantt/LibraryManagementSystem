@@ -13,16 +13,16 @@ namespace LibraryManagementSystem.Controllers
     public class BookController : Controller
     {
         private readonly ILogger<BookController> _logger;
-        private readonly ApplicationDBContext _context;
         private readonly IMapper _mapper;
         private readonly IBookRepository _bookRepository;
+        private readonly IUsersBookRepository _usersBookRepository;
 
-        public BookController(ILogger<BookController> logger, ApplicationDBContext context, IMapper mapper, IBookRepository bookRepository)
+        public BookController(ILogger<BookController> logger, IMapper mapper, IBookRepository bookRepository, IUsersBookRepository usersBookRepository)
         {
             _logger = logger;
-            _context = context;
             _mapper = mapper;
             _bookRepository = bookRepository;
+            _usersBookRepository = usersBookRepository;
         }
 
         public async Task<IActionResult> Index(string searchString, int pageIndex = 1)
@@ -60,6 +60,21 @@ namespace LibraryManagementSystem.Controllers
         {
             var book = await _bookRepository.GetById(id);
             return View(book);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> AddBookToUsersBook(int bookId)
+        {
+            var usersBook = new UsersBook()
+            {
+                Status = Data.Enum.UsersBookStatus.InWishlist,
+                AddingDate = DateTime.UtcNow,
+                BookId = bookId
+            };
+
+            await _usersBookRepository.Add(usersBook);
+
+            return Json(new { success = true, message = "Book added successfully." });
         }
 
         public IActionResult Privacy()

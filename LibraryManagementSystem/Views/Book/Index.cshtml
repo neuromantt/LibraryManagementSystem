@@ -33,8 +33,9 @@
                                 <p class="card-text">@item.Author</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <a type="btn btn-success" asp-controller="Book" asp-action="Create"
-                                            class="btn btn-sm btn-outline-secondary">Add</a>
+                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary" onclick="addBookToUser('@item.Id')">Add</a>
+                                        @* <a type="btn btn-success" asp-controller="Book" asp-action="Create"
+                                            class="btn btn-sm btn-outline-secondary">Add</a> *@
                                         @* <button type="button" class="btn btn-sm btn-outline-secondary">Add</button> *@
                                         <a type="btn btn-success" asp-controller="Book" asp-action="Details" asp-route-id="@item.Id"
                                             class="btn btn-sm btn-outline-secondary">View</a>
@@ -91,3 +92,20 @@
     </div>
 </div>
 
+
+<script>
+    function addBookToUser(bookId) {
+        $.ajax({
+            url: '@Url.Action("AddBookToUsersBook", "Book")',
+            type: 'POST',
+            data: { bookId: bookId },
+            success: function (result) {
+                alert('Book added successfully to your wishlist!');
+            },
+            error: function (xhr, status, error) {
+                console.log('Error:', error);
+                alert('Failed to add book. Please try again.');
+            }
+        });
+    }
+</script>
