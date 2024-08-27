@@ -56,6 +56,12 @@ namespace LibraryManagementSystem.Controllers
             return View(booksViewModel);
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var book = await _bookRepository.GetById(id);
+            return View(book);
+        }
+
         public IActionResult Privacy()
         {
             return View();
