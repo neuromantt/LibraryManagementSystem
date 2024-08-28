@@ -16,6 +16,19 @@
     </form>
 </div>
 
+
+<div class="container py-2">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary">Add new book</button>
+                <button type="button" class="btn btn-secondary">Add from books</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="album py-2 bg-body-tertiary">
     <div class="container">
 
@@ -26,17 +39,17 @@
                 {
                     <div class="col">
                         <div class="card shadow-sm">
-                            @* <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg> *@
-                            <img class="bd-placeholder-img card-img-top" @* height="100%" *@ src="@item.BookImage" alt="Thumbnail" role="img" aria-label="Placeholder: Thumbnail" />
+                            <img class="bd-placeholder-img card-img-top" src="@item.BookImage" alt="Thumbnail" role="img" aria-label="Placeholder: Thumbnail" />
                             <div class="card-body">
                                 <p class="card-text">@item.BookTitle</p>
                                 <p class="card-text">@item.BookAuthor</p>
+                                <p class="card-text fw-bold">@item.Status</p>
+                                @if (item.LendTo != null && item.LendTo != "")
+                                {
+                                    <p class="card-text fw-bold">Lend to: @item.LendTo</p>
+                                }
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary" onclick="addBookToUser('@item.Id')">Add</a>
-                                        @* <a type="btn btn-success" asp-controller="Book" asp-action="Create"
-                                class="btn btn-sm btn-outline-secondary">Add</a> *@
-                                        @* <button type="button" class="btn btn-sm btn-outline-secondary">Add</button> *@
                                         <a type="btn btn-success" asp-controller="Book" asp-action="Details" asp-route-id="@item.Id"
                                            class="btn btn-sm btn-outline-secondary">View</a>
                                     </div>
