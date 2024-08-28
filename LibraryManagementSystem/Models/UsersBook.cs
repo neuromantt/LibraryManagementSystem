@@ -11,7 +11,7 @@ namespace LibraryManagementSystem.Models
         public UsersBookStatus Status { get; set; } = UsersBookStatus.InWishlist;
         [MaxLength(450)]
         public string LendTo { get; set; } = string.Empty;
-        public DateTime AddingDate { get; set; } = DateTime.Now;
+        public DateTime AddingDate { get; set; } = DateTime.UtcNow;
         [ForeignKey("AppUser")]
         [MaxLength(450)]
         public string? UserId { get; set; }

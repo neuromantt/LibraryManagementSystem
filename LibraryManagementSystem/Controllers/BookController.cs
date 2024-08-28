@@ -46,7 +46,7 @@ namespace LibraryManagementSystem.Controllers
 
             var pager = new Pager(totalBooks, pageIndex, pageSize);
 
-            var booksViewModel = new ShowBooksViewModel()
+            var booksViewModel = new BooksViewModel()
             {
                 Books = booksMainInfo,
                 SearchString = searchString,

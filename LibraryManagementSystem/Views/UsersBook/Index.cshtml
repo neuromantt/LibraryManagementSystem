@@ -1,12 +1,12 @@
 ﻿@using LibraryManagementSystem.ViewModel
-@model BooksViewModel
+@model UsersBooksViewModel
 
 @{
-    ViewData["Title"] = "All books";
+    ViewData["Title"] = "My books";
 }
 
 <div class="container py-2">
-    <form method="get" class="form-inline" asp-action="Index" asp-controller="Book">
+    <form method="get" class="form-inline" asp-action="Index" asp-controller="UsersBook">
         <div class="input-group">
             <input name="searchString" class="form-control me-3" placeholder="Search for..." type="search">
             <div class="text-end">
@@ -27,18 +27,18 @@
                     <div class="col">
                         <div class="card shadow-sm">
                             @* <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg> *@
-                            <img class="bd-placeholder-img card-img-top" @* height="100%" *@ src="@item.Image" alt="Thumbnail" role="img" aria-label="Placeholder: Thumbnail" />
+                            <img class="bd-placeholder-img card-img-top" @* height="100%" *@ src="@item.BookImage" alt="Thumbnail" role="img" aria-label="Placeholder: Thumbnail" />
                             <div class="card-body">
-                                <p class="card-text">@item.Title</p>
-                                <p class="card-text">@item.Author</p>
+                                <p class="card-text">@item.BookTitle</p>
+                                <p class="card-text">@item.BookAuthor</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
                                         <a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary" onclick="addBookToUser('@item.Id')">Add</a>
                                         @* <a type="btn btn-success" asp-controller="Book" asp-action="Create"
-                                            class="btn btn-sm btn-outline-secondary">Add</a> *@
+                                class="btn btn-sm btn-outline-secondary">Add</a> *@
                                         @* <button type="button" class="btn btn-sm btn-outline-secondary">Add</button> *@
                                         <a type="btn btn-success" asp-controller="Book" asp-action="Details" asp-route-id="@item.Id"
-                                            class="btn btn-sm btn-outline-secondary">View</a>
+                                           class="btn btn-sm btn-outline-secondary">View</a>
                                     </div>
                                 </div>
                             </div>
@@ -64,27 +64,27 @@
                 @if (Model.Pager.CurrentPage > 1)
                 {
                     <li class="page-item">
-                        <a class="page-link" asp-controller="Book" asp-action="index" asp-route-pageIndex="1" asp-route-searchString="@Model.SearchString"> 1 </a>
+                        <a class="page-link" asp-controller="UsersBook" asp-action="index" asp-route-pageIndex="1" asp-route-searchString="@Model.SearchString"> 1 </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" asp-controller="Book" asp-action="index" asp-route-pageIndex="@(Model.Pager.CurrentPage - 1)" asp-route-searchString="@Model.SearchString">&laquo;</a>
+                        <a class="page-link" asp-controller="UsersBook" asp-action="index" asp-route-pageIndex="@(Model.Pager.CurrentPage - 1)" asp-route-searchString="@Model.SearchString">&laquo;</a>
                     </li>
                 }
 
                 @for (var currentPage = Model.Pager.StartPage; currentPage <= Model.Pager.EndPage; currentPage++)
                 {
                     <li class="page-item @(currentPage == Model.Pager.CurrentPage ? "active" : "")">
-                        <a class="page-link" asp-controller="Book" asp-action="index" asp-route-pageIndex="@currentPage" asp-route-searchString="@Model.SearchString"> @currentPage </a>
+                        <a class="page-link" asp-controller="UsersBook" asp-action="index" asp-route-pageIndex="@currentPage" asp-route-searchString="@Model.SearchString"> @currentPage </a>
                     </li>
                 }
 
                 @if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
                 {
                     <li class="page-item">
-                        <a class="page-link" asp-controller="Book" asp-action="index" asp-route-pageIndex="@(Model.Pager.CurrentPage + 1)" asp-route-searchString="@Model.SearchString">&raquo;</a>
+                        <a class="page-link" asp-controller="UsersBook" asp-action="index" asp-route-pageIndex="@(Model.Pager.CurrentPage + 1)" asp-route-searchString="@Model.SearchString">&raquo;</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" asp-controller="Book" asp-action="index" asp-route-pageIndex="@Model.Pager.TotalPages" asp-route-searchString="@Model.SearchString"> @Model.Pager.TotalPages </a>
+                        <a class="page-link" asp-controller="UsersBook" asp-action="index" asp-route-pageIndex="@Model.Pager.TotalPages" asp-route-searchString="@Model.SearchString"> @Model.Pager.TotalPages </a>
                     </li>
                 }
             </ul>
