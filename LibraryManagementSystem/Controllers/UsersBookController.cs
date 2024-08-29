@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using LibraryManagementSystem.Data.Enum;
+using LibraryManagementSystem.DTOs.ReadingSession;
 using LibraryManagementSystem.DTOs.UsersBook;
 using LibraryManagementSystem.Interfaces;
 using LibraryManagementSystem.Models;
@@ -12,13 +14,15 @@ namespace LibraryManagementSystem.Controllers
     {
         private readonly IUsersBookRepository _usersBookRepository;
         private readonly IBookRepository _bookRepository;
+        private readonly IReadingSessionRepository _readingSessionRepository;
         private readonly IMapper _mapper;
 
-        public UsersBookController(IUsersBookRepository usersBookRepository, IBookRepository bookRepository, IMapper mapper)
+        public UsersBookController(IUsersBookRepository usersBookRepository, IBookRepository bookRepository, IMapper mapper, IReadingSessionRepository readingSessionRepository)
         {
             _usersBookRepository = usersBookRepository;
             _bookRepository = bookRepository;
             _mapper = mapper;
+            _readingSessionRepository = readingSessionRepository;
         }
 
         public async Task<IActionResult> Index(string searchString, int pageIndex = 1)
@@ -51,6 +55,31 @@ namespace LibraryManagementSystem.Controllers
             };
 
             return View(usersBooksViewModel);
+        }
+
+        public async Task<IActionResult> Details(int id, UsersBookStatus status, string lendTo, int? bookId, string bookTitle, string bookAuthor, string bookImage)
+        {
+            var usersBook = new UsersBookInfoDto
+            {
+                Id = id,
+                Status = status,
+                LendTo = lendTo,
+                BookId = bookId,
+                BookTitle = bookTitle,
+                BookAuthor = bookAuthor,
+                BookImage = bookImage
+            };
+
+            var readingSessions = await _readingSessionRepository.GetAllByUsersBookId(id);
+            var readingSessionsInfo = _mapper.Map<IEnumerable<ReadingSessionInfoDto>>(readingSessions);
+
+            var usersBookWithSessionViewModel = new UsersBookWithSessionViewModel
+            {
+                Book = usersBook,
+                ReadingSessions = readingSessionsInfo
+            };
+
+            return View(usersBookWithSessionViewModel);
         }
     }
 }
