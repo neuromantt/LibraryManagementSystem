@@ -6,7 +6,7 @@ namespace LibraryManagementSystem.ViewModel
 {
     public class UsersBookWithSessionViewModel
     {
-        public UsersBookInfoDto Book { get; set; }
+        public UsersBookInfoDto UsersBook { get; set; }
         public IEnumerable<ReadingSessionInfoDto>? ReadingSessions { get; set; }
     }
 }

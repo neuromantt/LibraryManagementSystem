@@ -23,7 +23,6 @@
         <div class="col-12">
             <div class="d-flex justify-content-between">
                 <button type="button" class="btn btn-secondary">Add new book</button>
-                @* <button type="button" class="btn btn-secondary">Add from books</button> *@
                 <a type="btn btn-success" asp-controller="Book" asp-action="Index"
                    class="btn btn-secondary">Add from books</a>
             </div>
@@ -53,14 +52,7 @@
                                 }
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <a asp-controller="UsersBook" asp-action="Details"
-                                           asp-route-id="@item.Id"
-                                           asp-route-status="@item.Status"
-                                           asp-route-lendTo="@item.LendTo"
-                                           asp-route-bookId="@item.BookId"
-                                           asp-route-bookTitle="@item.BookTitle"
-                                           asp-route-bookAuthor="@item.BookAuthor"
-                                           asp-route-bookImage="@item.BookImage"
+                                        <a asp-controller="UsersBook" asp-action="Details" asp-route-usersBookId="@item.Id"
                                            class="btn btn-sm btn-outline-secondary">
                                             View
                                         </a>

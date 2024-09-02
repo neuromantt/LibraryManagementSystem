@@ -1,10 +1,6 @@
 ﻿@using LibraryManagementSystem.ViewModel
 @model UsersBookWithSessionViewModel
 
-@{
-    bool inRead = false;
-}
-
 <section class="py-5">
     <div class="container">
         <div class="row gx-5">
@@ -12,27 +8,25 @@
             <aside class="col-lg-4">
                 <div class="border rounded-3 mb-1 d-flex justify-content-center">
                     <a data-fslightbox="mygalley" class="rounded-3" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp">
-                        <img style="height: 500px; max-width: 100%; margin: auto;" class="rounded-4 fit" src="@Model.Book.BookImage" />
+                        <img style="height: 500px; max-width: 100%; margin: auto;" class="rounded-4 fit" src="@Model.UsersBook.BookImage" />
                     </a>
                 </div>
 
                 <br />
 
                 <div class="d-flex justify-content-center align-items-center">
-                    <a type="btn btn-success" asp-controller="Book" asp-action="Details" asp-route-id="@Model.Book.BookId"
+                    <a type="btn btn-success" asp-controller="Book" asp-action="Details" asp-route-id="@Model.UsersBook.BookId"
                        class="btn btn-primary w-100 shadow-0"> Go to book details </a>
                 </div>
             </aside>
 
             <!-- Center Column: Book Details -->
             <main class="col-lg-4">
-                @* <div class="ps-lg-3"> *@
-                <h2 class="fw-bold">@Model.Book.BookTitle</h2>
-                <h4>@Model.Book.BookAuthor</h4>
+                <div class="mb-4">
+                    <h2 class="fw-bold">@Model.UsersBook.BookTitle</h2>
+                    <h4>@Model.UsersBook.BookAuthor</h4>
+                </div>
 
-                <br />
-
-                <!-- First input field occupying full width with a button underneath -->
                 <div class="mb-4">
                     <div class="d-flex justify-content-between mt-2">
                         <input type="text" class="form-control w-50 me-1" placeholder="Start page" />
@@ -41,50 +35,52 @@
                     <button type="submit" class="btn btn-primary w-100 mt-2">Add session</button>
                 </div>
 
-
-                <div class="list-group mb-4">
-                    <label class="list-group-item d-flex gap-2">
-                        <input class="form-check-input flex-shrink-0" type="radio" name="bookStatus" id="wishlist" value="Wishlist" checked>
-                        <span>
-                            Wishlist
-                            <small class="d-block text-body-secondary">Add this book to your wishlist</small>
-                        </span>
-                    </label>
-                    <label class="list-group-item d-flex gap-2">
-                        <input class="form-check-input flex-shrink-0" type="radio" name="bookStatus" id="bought" value="Bought">
-                        <span>
-                            Bought
-                            <small class="d-block text-body-secondary">Set the status of the book as purchased</small>
-                        </span>
-                    </label>
-                    <label class="list-group-item d-flex gap-2">
-                        <input class="form-check-input flex-shrink-0" type="radio" name="bookStatus" id="inProgress" value="In Progress">
-                        <span>
-                            In Progress
-                            <small class="d-block text-body-secondary">Indicate that you are reading this book</small>
-                        </span>
-                    </label>
-                    <label class="list-group-item d-flex gap-2">
-                        <input class="form-check-input flex-shrink-0" type="radio" name="bookStatus" id="complete" value="Complete">
-                        <span>
-                            Complete
-                            <small class="d-block text-body-secondary">Indicate that you read a book</small>
-                        </span>
-                    </label>
-                    <button type="button" class="btn btn-primary w-100 mt-2" id="getSelectedStatus">Get Selected Status</button>
+                <div class="mb-4">
+                    <form method="post" asp-action="Details">
+                        <label asp-for="UsersBook.Status">Book status</label>
+                        <input type="hidden" asp-for="UsersBook.Id" value="@Model.UsersBook.Id" />
+                        <div class="list-group">
+                            <label class="list-group-item d-flex gap-2">
+                                <input class="form-check-input flex-shrink-0" asp-for="UsersBook.Status" type="radio" value="InWishlist">
+                                <span>
+                                    Wishlist
+                                    <small class="d-block text-body-secondary">Add this book to your wishlist</small>
+                                </span>
+                            </label>
+                            <label class="list-group-item d-flex gap-2">
+                                <input class="form-check-input flex-shrink-0" asp-for="UsersBook.Status" type="radio" value="Bought">
+                                <span>
+                                    Bought
+                                    <small class="d-block text-body-secondary">Set the status of the book as purchased</small>
+                                </span>
+                            </label>
+                            <label class="list-group-item d-flex gap-2">
+                                <input class="form-check-input flex-shrink-0" asp-for="UsersBook.Status" type="radio" value="InProgress">
+                                <span>
+                                    In Progress
+                                    <small class="d-block text-body-secondary">Indicate that you are reading this book</small>
+                                </span>
+                            </label>
+                            <label class="list-group-item d-flex gap-2">
+                                <input class="form-check-input flex-shrink-0" asp-for="UsersBook.Status" type="radio" value="Completed">
+                                <span>
+                                    Complete
+                                    <small class="d-block text-body-secondary">Indicate that you read a book</small>
+                                </span>
+                            </label>
+                        </div>
+                        <div>
+                            <label asp-for="UsersBook.LendTo">Lend To</label>
+                            <input asp-for="UsersBook.LendTo" class="form-control" placeholder="Name of borrower (currently none)" /> 
+                        </div>
+                        <div class="form-row form-group">
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary w-100 mt-2">Save</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-
-                <!-- Second input field occupying full width -->
-                <div class="">
-                    <input type="text" class="form-control" placeholder="Borrower (Currently no borrower)" value="" />
-                    <!-- Two buttons in one row underneath the input field -->
-                    <div class="d-flex justify-content-between mt-2">
-                        <button type="button" class="btn btn-primary w-50 me-1">Lend</button>
-                        <button type="button" class="btn btn-primary w-50 ms-1">Return</button>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-danger w-100 mt-2">Delete book from My books</button>
+                <a asp-controller="UsersBook" asp-action="DeleteUsersBook" asp-route-usersBookId="@Model.UsersBook.Id" class="btn btn-danger w-100">Delete book from My books</a>
             </main>
 
             <!-- Right Column: Additional Text -->
@@ -98,11 +94,22 @@
     </div>
 </section>
 
+
 @section Scripts {
     <script>
-        document.getElementById('getSelectedStatus').addEventListener('click', function() {
-            var selectedStatus = document.querySelector('input[name="bookStatus"]:checked').value;
-            alert('Selected Status: ' + selectedStatus);
-        });
+        function deleteUsersBook(usersBookId) {
+            $.ajax({
+                url: '@Url.Action("DeleteUsersBook", "UsersBook")',
+                type: 'POST',
+                data: { usersBookId: usersBookId },
+                success: function (result) {
+                    alert('Book deleted successfully to your wishlist!');
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error:', error);
+                    alert('Failed to delete book. Please try again.');
+                }
+            });
+        }
     </script>
 }

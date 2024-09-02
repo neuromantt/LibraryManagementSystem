@@ -9,10 +9,12 @@ namespace LibraryManagementSystem.Repositories
     public class UsersBookRepository : GenericRepository<UsersBook>, IUsersBookRepository
     {
         private readonly ApplicationDBContext _dbContext;
+        private readonly IReadingSessionRepository _readingSessionRepository;
 
-        public UsersBookRepository(ApplicationDBContext dbContext) : base(dbContext)
+        public UsersBookRepository(ApplicationDBContext dbContext, IReadingSessionRepository readingSessionRepository) : base(dbContext)
         {
             _dbContext = dbContext;
+            _readingSessionRepository = readingSessionRepository;
         }
 
         public async Task<IReadOnlyList<UsersBook>> GetUsersBooks(string userId)
@@ -72,6 +74,21 @@ namespace LibraryManagementSystem.Repositories
                 )
                 .Include(x => x.Book)
                 .CountAsync();
+        }
+
+        public async Task<UsersBook> GetUsersBookById(int usersBookId)
+        {
+            return await _dbContext.UsersBooks
+                .Where(x => x.Id == usersBookId)
+                .Include(x => x.Book)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task DeleteUsersBookWithSessions(int usersBookId)
+        {
+            await _readingSessionRepository.DeleteAllByUsersBookId(usersBookId);
+
+            await Delete(await GetById(usersBookId));
         }
     }
 }
