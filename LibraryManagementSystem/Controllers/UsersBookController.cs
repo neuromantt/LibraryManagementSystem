@@ -102,5 +102,47 @@ namespace LibraryManagementSystem.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<JsonResult> AddReadingSession(int startPage, int endPage, int usersBookId)
+        {
+            if (startPage > 0 && endPage >= startPage)
+            {
+                var existingPage = await _readingSessionRepository.AlreadyReadPages(startPage, endPage, usersBookId);
+
+                if (!existingPage)
+                {
+                    var readingSession = new ReadingSession()
+                    {
+                        StartPage = startPage,
+                        EndPage = endPage,
+                        UsersBookId = usersBookId
+                    };
+
+                    await _readingSessionRepository.Add(readingSession);
+
+                    return Json(new { success = true, message = "Reading pages added successfully." });
+                }
+                return Json(new { success = false, message = "These pages have already been read." });
+            }
+            return Json(new { success = false, message = "Start page must be greater than 0 and less than end page." });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DeleteReadingSession(int usersBookId)
+        {
+            await _readingSessionRepository.DeleteLastSession(usersBookId);
+
+            return Json(new { success = true, message = "These pages have already been read." });
+        }
+
+        public async Task<IActionResult> GetUpdatedReadingSessions(int usersBookId)
+        {
+            var readingSessions = await _readingSessionRepository.GetAllByUsersBookId(usersBookId);
+            var readingSessionsInfo = _mapper.Map<IEnumerable<ReadingSessionInfoDto>>(readingSessions);
+
+            return PartialView("_ReadingSessionsPartial", readingSessionsInfo);
+        }
+
     }
 }

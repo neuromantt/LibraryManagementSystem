@@ -7,8 +7,7 @@ namespace LibraryManagementSystem.Models
         public int Id { get; set; }
         public int StartPage { get; set; }
         public int EndPage { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public DateTime AddingDate { get; set; } = DateTime.UtcNow;
         [ForeignKey("UsersBook")]
         public int? UsersBookId { get; set; }
         public UsersBook? UsersBook { get; set; }

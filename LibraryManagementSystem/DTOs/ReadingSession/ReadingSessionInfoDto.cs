@@ -6,7 +6,7 @@ namespace LibraryManagementSystem.DTOs.ReadingSession
     {
         public int StartPage { get; set; }
         public int EndPage { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public DateTime AddingDate { get; set; }
+        public int? UsersBookId { get; set; }
     }
 }

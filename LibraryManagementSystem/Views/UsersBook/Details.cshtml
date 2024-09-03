@@ -29,10 +29,11 @@
 
                 <div class="mb-4">
                     <div class="d-flex justify-content-between mt-2">
-                        <input type="text" class="form-control w-50 me-1" placeholder="Start page" />
-                        <input type="text" class="form-control w-50 ms-1" placeholder="End page" />
+                        <input type="text" class="form-control w-50 me-1" name="startPage" placeholder="Start page" />
+                        <input type="text" class="form-control w-50 ms-1" name="endPage" placeholder="End page" />
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 mt-2">Add session</button>
+                    <button type="submit" class="btn btn-primary w-100 mt-2" id="getReadingSession">Add session</button>
+                    <button type="submit" class="btn btn-danger w-100 mt-2" id="deleteReadingSession">Delete last session</button>
                 </div>
 
                 <div class="mb-4">
@@ -85,9 +86,8 @@
 
             <!-- Right Column: Additional Text -->
             <aside class="col-lg-4">
-                <div class="border rounded-3 p-3">
-                    <h4>Reading sessions</h4>
-                    <p>Reading sessiong 1...</p>
+                <div class="border rounded-3 p-3" id="reading-sessions">
+                    @await Html.PartialAsync("_ReadingSessionsPartial", Model.ReadingSessions)
                 </div>
             </aside>
         </div>
@@ -111,5 +111,51 @@
                 }
             });
         }
+
+        document.getElementById('getReadingSession').addEventListener('click', function () {
+            var startPage = document.querySelector('input[name="startPage"]').value;
+            var endPage = document.querySelector('input[name="endPage"]').value;
+
+            $.ajax({
+                url: '@Url.Action("AddReadingSession", "UsersBook")',
+                type: 'POST',
+                data: { startPage: startPage, endPage: endPage, usersBookId: @Model.UsersBook.Id },
+                success: function (result) {
+                    if (result.success) {
+                        // Update the reading sessions part of the view
+                        $('#reading-sessions').load('@Url.Action("GetUpdatedReadingSessions", "UsersBook")?usersBookId=@Model.UsersBook.Id');
+                        document.querySelector('input[name="startPage"]').value = '';
+                        document.querySelector('input[name="endPage"]').value = '';
+                    } else {
+                        alert(result.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error:', error);
+                    alert('Failed to add session. Please try again.');
+                }
+            });
+        });
+
+        document.getElementById('deleteReadingSession').addEventListener('click', function () {
+
+            $.ajax({
+                url: '@Url.Action("DeleteReadingSession", "UsersBook")',
+                type: 'POST',
+                data: { usersBookId: @Model.UsersBook.Id },
+                success: function (result) {
+                    if (result.success) {
+                        // Update the reading sessions part of the view
+                        $('#reading-sessions').load('@Url.Action("GetUpdatedReadingSessions", "UsersBook")?usersBookId=@Model.UsersBook.Id');
+                    } else {
+                        alert(result.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error:', error);
+                    alert('Failed to add session. Please try again.');
+                }
+            });
+        });
     </script>
 }

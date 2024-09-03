@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LibraryManagementSystem.DTOs.Book;
+using LibraryManagementSystem.DTOs.ReadingSession;
 using LibraryManagementSystem.DTOs.UsersBook;
 using LibraryManagementSystem.Models;
 
@@ -18,6 +19,8 @@ namespace LibraryManagementSystem.Profiles
                 .ForMember(dest => dest.BookTitle, src => src.MapFrom(x => x.Book.Title))
                 .ForMember(dest => dest.BookAuthor, src => src.MapFrom(x => x.Book.Author))
                 .ForMember(dest => dest.BookImage, src => src.MapFrom(x => x.Book.Image));
+
+            CreateMap<ReadingSession, ReadingSessionInfoDto>().ReverseMap();
         }
     }
 }
