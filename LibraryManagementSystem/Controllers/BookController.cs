@@ -16,13 +16,15 @@ namespace LibraryManagementSystem.Controllers
         private readonly IMapper _mapper;
         private readonly IBookRepository _bookRepository;
         private readonly IUsersBookRepository _usersBookRepository;
+        private readonly IPhotoService _photoService;
 
-        public BookController(ILogger<BookController> logger, IMapper mapper, IBookRepository bookRepository, IUsersBookRepository usersBookRepository)
+        public BookController(ILogger<BookController> logger, IMapper mapper, IBookRepository bookRepository, IUsersBookRepository usersBookRepository, IPhotoService photoService)
         {
             _logger = logger;
             _mapper = mapper;
             _bookRepository = bookRepository;
             _usersBookRepository = usersBookRepository;
+            _photoService = photoService;
         }
 
         public async Task<IActionResult> Index(string searchString, int pageIndex = 1)
@@ -75,6 +77,21 @@ namespace LibraryManagementSystem.Controllers
             await _usersBookRepository.Add(usersBook);
 
             return Json(new { success = true, message = "Book added successfully." });
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateBookViewModel bookVM)
+        {
+            var book = _mapper.Map<Book>(bookVM);
+            book.Image = (await _photoService.AddPhotoAsync(bookVM.Image!)).Url.ToString();
+
+            await _bookRepository.Add(book);
+            return RedirectToAction("Index");
         }
 
         public IActionResult Privacy()

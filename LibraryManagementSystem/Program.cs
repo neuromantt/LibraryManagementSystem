@@ -1,16 +1,20 @@
 using LibraryManagementSystem.Data;
+using LibraryManagementSystem.Helpers;
 using LibraryManagementSystem.Interfaces;
 using LibraryManagementSystem.Repositories;
+using LibraryManagementSystem.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 builder.Services.AddScoped<IAppUserRepository, AppUserRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IReadingSessionRepository, ReadingSessionRepository>();
 builder.Services.AddScoped<IUsersBookRepository, UsersBookRepository>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

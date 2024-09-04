@@ -3,6 +3,7 @@ using LibraryManagementSystem.DTOs.Book;
 using LibraryManagementSystem.DTOs.ReadingSession;
 using LibraryManagementSystem.DTOs.UsersBook;
 using LibraryManagementSystem.Models;
+using LibraryManagementSystem.ViewModel;
 
 namespace LibraryManagementSystem.Profiles
 {
@@ -12,6 +13,7 @@ namespace LibraryManagementSystem.Profiles
         {
             CreateMap<Book, BookMainInfoDto>().ReverseMap();
             CreateMap<Book, BookInfoDto>().ReverseMap();
+            CreateMap<Book, CreateBookViewModel>().ReverseMap();
 
             CreateMap<UsersBook, UsersBookInfoDto>()
                 .ForMember(dest => dest.Id, src => src.MapFrom(x => x.Id))
