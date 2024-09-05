@@ -43,7 +43,10 @@
                 <br />
                 
                 <div class="d-flex justify-content-center align-items-center">
-                    <a href="#" style="width: 50%" class="btn btn-primary shadow-0"> Edit </a>
+                    <a type="button" class="btn btn-primary" style="width: 50%"
+                        asp-controller="Book" asp-action="Edit" asp-route-bookId="@Model.Id">Edit</a>
+                    <a type="button" class="btn btn-danger" style="width: 50%"
+                        asp-controller="Book" asp-action="Delete" asp-route-bookId="@Model.Id">Delete</a>
                 </div>
             </main>
         </div>

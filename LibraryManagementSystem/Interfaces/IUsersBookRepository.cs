@@ -12,5 +12,6 @@ namespace LibraryManagementSystem.Interfaces
         public Task<int> CountAllUsersBooks(string userId);
         public Task<int> CountAllUsersBooksSearchByTitleOrAuthor(string userId, string searchString);
         public Task DeleteUsersBookWithSessions(int usersBookId);
+        public Task DeleteAllUsersBooksWithSessionsByBookId(int bookId);
     }
 }

@@ -43,5 +43,12 @@ namespace LibraryManagementSystem.Repositories
                 s.Author!.ToLower().Contains(searchString.ToLower())
             ).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
         }
+
+        public async Task<Book> GetByIdNoTracking(int id)
+        {
+            return await _dbContext.Books
+                .AsNoTracking()
+                .SingleOrDefaultAsync(e => e.Id == id);
+        }
     }
 }

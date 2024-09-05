@@ -1,0 +1,64 @@
+﻿@using LibraryManagementSystem.ViewModel
+@model EditBookViewModel
+
+<div class="container">
+    <main>
+        <div class="row g-5 justify-content-md-center">
+            <div class="col-10">
+                <br />
+                <h4 class="mb-3">Editing book</h4>
+                <form method="post" asp-action="Edit" enctype="multipart/form-data">
+                    <div class="row g-5">
+                        <div class="col-md-5">
+                            <div class="row g-3">
+                                <input type="hidden" id="Id" name="Id" asp-for="Id" />
+                                <input type="hidden" id="Image" name="Image" asp-for="Image" />
+
+                                <div class="col-12">
+                                    <label asp-for="Title" class="form-label">Title</label>
+                                    <input type="text" asp-for="Title" class="form-control" id="title" placeholder="Title" required>
+                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <label asp-for="Author" class="form-label">Author</label>
+                                    <input type="text" asp-for="Author" class="form-control" id="author" placeholder="Author" required>
+                                    <span asp-validation-for="Author" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <label asp-for="Category" class="form-label">Category</label>
+                                    <input type="text" asp-for="Category" class="form-control" id="category" placeholder="Category" required>
+                                    <span asp-validation-for="Category" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <label asp-for="PublishYear" class="form-label">Publish Year</label>
+                                    <input type="text" asp-for="PublishYear" class="form-control" id="publishYear" placeholder="PublishYear" required>
+                                    <span asp-validation-for="PublishYear" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <label asp-for="ImageFile" class="form-label">Image</label>
+                                    <input type="file" asp-for="ImageFile" class="form-control" id="imageFile" placeholder="Image">
+                                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7 order-md-last">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control" id="description" placeholder="Description" rows="15" required></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <br />
+                    <hr class="my-4">
+
+                    <button class="w-100 btn btn-primary btn-lg" type="submit">Edit book</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+

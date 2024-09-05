@@ -8,5 +8,6 @@ namespace LibraryManagementSystem.Interfaces
         public Task<IReadOnlyList<Book>> GetAllFromPageWithSize(int pageIndex, int pageSize);
         public Task<IReadOnlyList<Book>> GetAllSearchByTitleOrAuthorFromPageWithSize(string searchString, int pageIndex, int pageSize);
         Task<int> CountAllSearchByTitleOrAuthor(string searchString);
+        Task<Book> GetByIdNoTracking(int id);
     }
 }

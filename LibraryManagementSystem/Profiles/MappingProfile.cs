@@ -14,6 +14,9 @@ namespace LibraryManagementSystem.Profiles
             CreateMap<Book, BookMainInfoDto>().ReverseMap();
             CreateMap<Book, BookInfoDto>().ReverseMap();
             CreateMap<Book, CreateBookViewModel>().ReverseMap();
+            CreateMap<Book, EditBookViewModel>().ReverseMap();
+                //.ForMember(dest => dest.URL, src => src.MapFrom(x => x.Image))
+                //.ForMember(dest => dest.Image, new IFormFile);
 
             CreateMap<UsersBook, UsersBookInfoDto>()
                 .ForMember(dest => dest.Id, src => src.MapFrom(x => x.Id))

@@ -90,5 +90,17 @@ namespace LibraryManagementSystem.Repositories
 
             await Delete(await GetById(usersBookId));
         }
+
+        public async Task DeleteAllUsersBooksWithSessionsByBookId(int bookId)
+        {
+            var usersBooks = await _dbContext.UsersBooks
+                .Where(x => x.BookId == bookId)
+                .ToListAsync();
+
+            foreach (var usersBook in usersBooks)
+            {
+                await DeleteUsersBookWithSessions(usersBook.Id);
+            }
+        }
     }
 }

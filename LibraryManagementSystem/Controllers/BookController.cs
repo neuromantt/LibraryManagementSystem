@@ -7,6 +7,7 @@ using LibraryManagementSystem.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
+using System.Net;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -91,6 +92,89 @@ namespace LibraryManagementSystem.Controllers
             book.Image = (await _photoService.AddPhotoAsync(bookVM.Image!)).Url.ToString();
 
             await _bookRepository.Add(book);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Edit(int bookId)
+        {
+            var book = await _bookRepository.GetById(bookId);
+            if (book == null)
+                return View("Error");
+
+            var bookVM = _mapper.Map<EditBookViewModel>(book);
+
+            return View(bookVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditBookViewModel bookVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Failed to edit book");
+                return View("Edit", bookVM);
+            }
+
+            var book = await _bookRepository.GetByIdNoTracking(bookVM.Id);
+
+            if (book == null)
+            {
+                return View("Error");
+            }
+
+            Book editedBook = null;
+
+            if (bookVM.ImageFile == null)
+            {
+                editedBook = _mapper.Map<Book>(bookVM);
+                editedBook.CreatedDate = book.CreatedDate;
+                editedBook.CreatedById = book.CreatedById;
+                //last modified by
+            }
+            else
+            {
+                var photoResult = await _photoService.AddPhotoAsync(bookVM.ImageFile);
+
+                if (photoResult.Error != null)
+                {
+                    ModelState.AddModelError("Image", "Photo upload failed");
+                    return View(bookVM);
+                }
+
+                if (!string.IsNullOrEmpty(book.Image))
+                {
+                    _ = _photoService.DeletePhotoAsync(book.Image);
+                }
+
+                editedBook = _mapper.Map<Book>(bookVM);
+                editedBook.Image = photoResult.Url.ToString();
+                editedBook.CreatedDate = book.CreatedDate;
+                editedBook.CreatedById = book.CreatedById;
+                //last modified by
+            }
+            await _bookRepository.Update(editedBook);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int bookId)
+        {
+            var book = await _bookRepository.GetByIdNoTracking(bookId);
+
+            if (book == null)
+            {
+                return View("Error");
+            }
+
+            if (!string.IsNullOrEmpty(book.Image) && book.Image.Contains("cloudinary"))
+            {
+                _ = _photoService.DeletePhotoAsync(book.Image);
+            }
+
+            await _usersBookRepository.DeleteAllUsersBooksWithSessionsByBookId(bookId);
+            await _bookRepository.Delete(book);
+
             return RedirectToAction("Index");
         }
 
