@@ -4,7 +4,9 @@ using LibraryManagementSystem.DTOs.Book;
 using LibraryManagementSystem.Interfaces;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.ViewModel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
 using System.Net;
@@ -18,14 +20,16 @@ namespace LibraryManagementSystem.Controllers
         private readonly IBookRepository _bookRepository;
         private readonly IUsersBookRepository _usersBookRepository;
         private readonly IPhotoService _photoService;
+        private readonly UserManager<AppUser> _userManager;
 
-        public BookController(ILogger<BookController> logger, IMapper mapper, IBookRepository bookRepository, IUsersBookRepository usersBookRepository, IPhotoService photoService)
+        public BookController(ILogger<BookController> logger, IMapper mapper, IBookRepository bookRepository, IUsersBookRepository usersBookRepository, IPhotoService photoService, UserManager<AppUser> userManager)
         {
             _logger = logger;
             _mapper = mapper;
             _bookRepository = bookRepository;
             _usersBookRepository = usersBookRepository;
             _photoService = photoService;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(string searchString, int pageIndex = 1)
@@ -47,11 +51,19 @@ namespace LibraryManagementSystem.Controllers
 
             IEnumerable<BookMainInfoDto> booksMainInfo = _mapper.Map<IEnumerable<BookMainInfoDto>>(books);
 
+            IEnumerable<int> addedBooks = Array.Empty<int>();
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = _userManager.GetUserId(User);
+                addedBooks = await _usersBookRepository.GetAllBooksByUserId(userId);
+            }
+
             var pager = new Pager(totalBooks, pageIndex, pageSize);
 
             var booksViewModel = new BooksViewModel()
             {
                 Books = booksMainInfo,
+                AddedBooks = addedBooks,
                 SearchString = searchString,
                 Pager = pager
             };
@@ -65,19 +77,19 @@ namespace LibraryManagementSystem.Controllers
             return View(book);
         }
 
-        [HttpPost]
-        public async Task<JsonResult> AddBookToUsersBook(int bookId)
+        public async Task<IActionResult> AddBookToUsersBook(int bookId, string searchString, int pageIndex)
         {
             var usersBook = new UsersBook()
             {
                 Status = Data.Enum.UsersBookStatus.InWishlist,
                 AddingDate = DateTime.UtcNow,
+                UserId = _userManager.GetUserId(User),
                 BookId = bookId
             };
 
             await _usersBookRepository.Add(usersBook);
 
-            return Json(new { success = true, message = "Book added successfully." });
+            return RedirectToAction("Index", new { searchString = searchString, pageIndex = pageIndex });
         }
 
         public IActionResult Create()

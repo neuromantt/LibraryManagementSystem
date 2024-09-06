@@ -5,6 +5,7 @@ namespace LibraryManagementSystem.Interfaces
 {
     public interface IUsersBookRepository : IGenericRepository<UsersBook>
     {
+        public Task<IReadOnlyList<int>> GetAllBooksByUserId(string userId);
         public Task<UsersBook> GetUsersBookById(int usersBookId);
         public Task<IReadOnlyList<UsersBook>> GetUsersBooks(string userId);
         public Task<IReadOnlyList<UsersBook>> GetUsersBooksFromPageWithSize(string userId, int pageIndex, int pageSize);

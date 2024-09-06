@@ -102,5 +102,13 @@ namespace LibraryManagementSystem.Repositories
                 await DeleteUsersBookWithSessions(usersBook.Id);
             }
         }
+
+        public async Task<IReadOnlyList<int>> GetAllBooksByUserId(string userId)
+        {
+            return await _dbContext.UsersBooks
+                .Where(x => x.UserId == userId && x.BookId.HasValue)
+                .Select(x => x.BookId.Value)
+                .ToListAsync();
+        }
     }
 }
