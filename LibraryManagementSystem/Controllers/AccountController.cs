@@ -91,7 +91,7 @@ namespace LibraryManagementSystem.Controllers
             }
             else
             {
-                await _userManager.AddToRoleAsync(newUser, UserRoles.Admin);
+                await _userManager.AddToRoleAsync(newUser, UserRoles.User);
             }
 
             return RedirectToAction("Index", "Book");
