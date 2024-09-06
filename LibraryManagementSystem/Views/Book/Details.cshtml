@@ -21,7 +21,6 @@
                             asp-route-bookId="@Model.Book.Id"
                             class="btn btn-primary shadow-0 col-lg-6">Add to my books</a>
                     }
-                    @* <a href="#" style="width: 50%" class="btn btn-primary shadow-0"> Add to my books </a> *@
                 </div>
             </aside>
             <main class="col-sm-7">
@@ -49,10 +48,13 @@
                 <br />
                 
                 <div class="d-flex justify-content-center align-items-center">
-                    <a type="button" class="btn btn-primary" style="width: 50%"
-                        asp-controller="Book" asp-action="Edit" asp-route-bookId="@Model.Book.Id">Edit</a>
-                    <a type="button" class="btn btn-danger" style="width: 50%"
-                        asp-controller="Book" asp-action="Delete" asp-route-bookId="@Model.Book.Id">Delete</a>
+                    @if (Model.CanBeModified)
+                    {
+                        <a type="button" class="btn btn-primary col-5 m-2"
+                            asp-controller="Book" asp-action="Edit" asp-route-bookId="@Model.Book.Id">Edit</a>
+                        <a type="button" class="btn btn-danger  col-5 m-2"
+                            asp-controller="Book" asp-action="Delete" asp-route-bookId="@Model.Book.Id">Delete</a>                        
+                    }
                 </div>
             </main>
         </div>

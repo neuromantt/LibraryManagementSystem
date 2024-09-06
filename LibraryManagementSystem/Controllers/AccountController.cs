@@ -65,7 +65,7 @@ namespace LibraryManagementSystem.Controllers
         {
             // user@gmail.com
             // User1234!
-            // admin@gmail.com
+            // admin2@gmail.com
             // Admin1234! 
 
             if (!ModelState.IsValid) return View(registerViewModel);

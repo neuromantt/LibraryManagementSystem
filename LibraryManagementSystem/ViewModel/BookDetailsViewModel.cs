@@ -6,5 +6,6 @@ namespace LibraryManagementSystem.ViewModel
     {
         public Book Book { get; set; }
         public bool CanBeAdded { get; set; }
+        public bool CanBeModified { get; set; }
     }
 }

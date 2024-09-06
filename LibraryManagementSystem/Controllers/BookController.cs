@@ -74,11 +74,14 @@ namespace LibraryManagementSystem.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var book = await _bookRepository.GetById(id);
-            var bookAdded = await _usersBookRepository.UserHasABook(_userManager.GetUserId(User), id);
+            var userId = _userManager.GetUserId(User);
+            var bookAdded = await _usersBookRepository.UserHasABook(userId, id);
+            var bookModifiable = book.CreatedById == userId || User.IsInRole("admin");
             var bookDetailsViewModel = new BookDetailsViewModel()
             {
                 Book = book,
                 CanBeAdded = !bookAdded,
+                CanBeModified = bookModifiable,
             };
 
             return View(bookDetailsViewModel);
@@ -160,7 +163,7 @@ namespace LibraryManagementSystem.Controllers
                 editedBook = _mapper.Map<Book>(bookVM);
                 editedBook.CreatedDate = book.CreatedDate;
                 editedBook.CreatedById = book.CreatedById;
-                //last modified by
+                editedBook.LastModifiedById = _userManager.GetUserId(User);
             }
             else
             {
@@ -181,14 +184,13 @@ namespace LibraryManagementSystem.Controllers
                 editedBook.Image = photoResult.Url.ToString();
                 editedBook.CreatedDate = book.CreatedDate;
                 editedBook.CreatedById = book.CreatedById;
-                //last modified by
+                editedBook.LastModifiedById = _userManager.GetUserId(User);
             }
             await _bookRepository.Update(editedBook);
 
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
         public async Task<IActionResult> Delete(int bookId)
         {
             var book = await _bookRepository.GetByIdNoTracking(bookId);
