@@ -74,10 +74,17 @@ namespace LibraryManagementSystem.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var book = await _bookRepository.GetById(id);
-            return View(book);
+            var bookAdded = await _usersBookRepository.UserHasABook(_userManager.GetUserId(User), id);
+            var bookDetailsViewModel = new BookDetailsViewModel()
+            {
+                Book = book,
+                CanBeAdded = !bookAdded,
+            };
+
+            return View(bookDetailsViewModel);
         }
 
-        public async Task<IActionResult> AddBookToUsersBook(int bookId, string searchString, int pageIndex)
+        public async Task AddBookToUsersBook(int bookId)
         {
             var usersBook = new UsersBook()
             {
@@ -88,6 +95,18 @@ namespace LibraryManagementSystem.Controllers
             };
 
             await _usersBookRepository.Add(usersBook);
+        }
+
+        public async Task<IActionResult> AddBookToUsersBookFromDetails(int bookId)
+        {
+            await AddBookToUsersBook(bookId);
+
+            return RedirectToAction("Details", new { Id = bookId });
+        }
+
+        public async Task<IActionResult> AddBookToUsersBookFromIndex(int bookId, string searchString, int pageIndex = 1)
+        {
+            await AddBookToUsersBook(bookId);
 
             return RedirectToAction("Index", new { searchString = searchString, pageIndex = pageIndex });
         }

@@ -110,5 +110,14 @@ namespace LibraryManagementSystem.Repositories
                 .Select(x => x.BookId.Value)
                 .ToListAsync();
         }
+
+        public async Task<bool> UserHasABook(string userId, int bookId)
+        {
+            var book = await _dbContext.UsersBooks
+                .Where(x => x.UserId == userId && x.BookId == bookId)
+                .FirstOrDefaultAsync();
+
+            return (book != null);
+        }
     }
 }

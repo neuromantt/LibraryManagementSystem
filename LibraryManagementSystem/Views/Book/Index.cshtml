@@ -34,7 +34,7 @@
                                     <div class="btn-group">
                                         @if (User.Identity.IsAuthenticated && !Model.AddedBooks.Contains(item.Id))
                                         {
-                                            <a type="btn btn-success" asp-controller="Book" asp-action="AddBookToUsersBook"
+                                            <a type="btn btn-success" asp-controller="Book" asp-action="AddBookToUsersBookFromIndex"
                                                 asp-route-bookId="@item.Id" asp-route-searchString="@Model.SearchString" asp-route-pageIndex="@Model.Pager.CurrentPage"
                                                 class="btn btn-sm btn-outline-secondary">Add</a>
                                         }

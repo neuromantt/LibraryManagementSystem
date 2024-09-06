@@ -1,42 +1,48 @@
-﻿@model Book
+﻿@using LibraryManagementSystem.ViewModel
+@model BookDetailsViewModel
 
 <!-- content -->
 <section class="py-5">
     <div class="container">
         <div class="row gx-5">
-            <aside class="col-lg-6">
-                <div class="border rounded-3 mb-3 d-flex justify-content-center">
+            <aside class="col-md-5">
+                <div class="rounded-3 mb-3 d-flex justify-content-center">
                     <a data-fslightbox="mygalley" class="rounded-3" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp">
-                        <img style="height: 500px; max-width: 100%; margin: auto;" class="rounded-4 fit" src="@Model.Image" />
-                        <!--<img class="bd-placeholder-img card-img-top"--> @* height="100%" *@ <!--src="@Model.Image" alt="Thumbnail" role="img" aria-label="Placeholder: Thumbnail" />-->
+                        <img style="height: 500px; max-width: 100%; margin: auto;" class="rounded-4 fit" src="@Model.Book.Image" />
                     </a>
                 </div>
 
                 <br />
 
                 <div class="d-flex justify-content-center align-items-center">
-                    <a href="#" style="width: 50%" class="btn btn-primary shadow-0"> Add to my books </a>
+                    @if (User.Identity.IsAuthenticated && Model.CanBeAdded)
+                    {
+                        <a type="btn btn-success" asp-controller="Book" asp-action="AddBookToUsersBookFromDetails"
+                            asp-route-bookId="@Model.Book.Id"
+                            class="btn btn-primary shadow-0 col-lg-6">Add to my books</a>
+                    }
+                    @* <a href="#" style="width: 50%" class="btn btn-primary shadow-0"> Add to my books </a> *@
                 </div>
             </aside>
-            <main class="col-lg-6">
-                <div class="ps-lg-3">
-                    <h2>@Model.Title</h2>
-                    <h4>@Model.Author</h4>
+            <main class="col-sm-7">
+                <div class="ps-md-3">
+                    <h2>@Model.Book.Title</h2>
+                    <h4>@Model.Book.Author</h4>
 
                     <br />
 
                     <div class="row">
                         <dt class="col-3">Category:</dt>
-                        <dd class="col-9">@Model.Category</dd>
+                        <dd class="col-9">@Model.Book.Category</dd>
 
                         <dt class="col-3">Publication year:</dt>
-                        <dd class="col-9">@Model.PublishYear</dd>
+                        <dd class="col-9">@Model.Book.PublishYear</dd>
                     </div>
 
                     <br />
 
                     <h4>Book Description</h4>
-                    <p>@Model.Description</p>
+                    <p>@Model.Book.Description</p>
 
                 </div class="justify-content-center align-items-center">
                     
@@ -44,9 +50,9 @@
                 
                 <div class="d-flex justify-content-center align-items-center">
                     <a type="button" class="btn btn-primary" style="width: 50%"
-                        asp-controller="Book" asp-action="Edit" asp-route-bookId="@Model.Id">Edit</a>
+                        asp-controller="Book" asp-action="Edit" asp-route-bookId="@Model.Book.Id">Edit</a>
                     <a type="button" class="btn btn-danger" style="width: 50%"
-                        asp-controller="Book" asp-action="Delete" asp-route-bookId="@Model.Id">Delete</a>
+                        asp-controller="Book" asp-action="Delete" asp-route-bookId="@Model.Book.Id">Delete</a>
                 </div>
             </main>
         </div>
