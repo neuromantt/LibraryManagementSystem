@@ -80,7 +80,7 @@ namespace LibraryManagementSystem.Controllers
             var newUser = new AppUser()
             {
                 Email = registerViewModel.EmailAddress,
-                UserName = registerViewModel.EmailAddress
+                UserName = registerViewModel.UserName,
             };
             var newUserResponse = await _userManager.CreateAsync(newUser, registerViewModel.Password);
 
