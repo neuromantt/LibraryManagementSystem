@@ -124,6 +124,8 @@ namespace LibraryManagementSystem.Controllers
         {
             var book = _mapper.Map<Book>(bookVM);
             book.Image = (await _photoService.AddPhotoAsync(bookVM.Image!)).Url.ToString();
+            book.CreatedById = _userManager.GetUserId(User);
+            book.LastModifiedById = _userManager.GetUserId(User);
 
             await _bookRepository.Add(book);
             return RedirectToAction("Index");

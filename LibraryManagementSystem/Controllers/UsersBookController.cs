@@ -5,6 +5,7 @@ using LibraryManagementSystem.DTOs.UsersBook;
 using LibraryManagementSystem.Interfaces;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.ViewModel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.IdentityModel.Tokens;
@@ -20,31 +21,34 @@ namespace LibraryManagementSystem.Controllers
         private readonly IBookRepository _bookRepository;
         private readonly IReadingSessionRepository _readingSessionRepository;
         private readonly IMapper _mapper;
+        private readonly UserManager<AppUser> _userManager;
 
-        public UsersBookController(IUsersBookRepository usersBookRepository, IBookRepository bookRepository, IMapper mapper, IReadingSessionRepository readingSessionRepository)
+        public UsersBookController(IUsersBookRepository usersBookRepository, IBookRepository bookRepository, IMapper mapper, IReadingSessionRepository readingSessionRepository, UserManager<AppUser> userManager)
         {
             _usersBookRepository = usersBookRepository;
             _bookRepository = bookRepository;
             _mapper = mapper;
             _readingSessionRepository = readingSessionRepository;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(string searchString, int pageIndex = 1)
         {
-            IEnumerable<UsersBook> books = null;
+            IEnumerable<UsersBook> books = Array.Empty<UsersBook>();
+            var userId = _userManager.GetUserId(User) ?? "";
             const int pageSize = 30;
             int totalBooks;
 
             if (searchString.IsNullOrEmpty())
             {
                 
-                books = await _usersBookRepository.GetUsersBooksFromPageWithSize("", pageIndex, pageSize);
-                totalBooks = await _usersBookRepository.CountAllUsersBooks("");
+                books = await _usersBookRepository.GetUsersBooksFromPageWithSize(userId, pageIndex, pageSize);
+                totalBooks = await _usersBookRepository.CountAllUsersBooks(userId);
             }
             else
             {
-                books = await _usersBookRepository.GetUsersBooksByTitleOrAuthorFromPageWithSize("", searchString, pageIndex, pageSize);
-                totalBooks = await _usersBookRepository.CountAllUsersBooksSearchByTitleOrAuthor("", searchString);
+                books = await _usersBookRepository.GetUsersBooksByTitleOrAuthorFromPageWithSize(userId, searchString, pageIndex, pageSize);
+                totalBooks = await _usersBookRepository.CountAllUsersBooksSearchByTitleOrAuthor(userId, searchString);
             }
 
             IEnumerable<UsersBookInfoDto> usersBooksInfo = _mapper.Map<IEnumerable<UsersBookInfoDto>>(books);
