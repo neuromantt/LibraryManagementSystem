@@ -32,6 +32,13 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 var app = builder.Build();
 
+// Create roles on startup
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    await EnsureRolesCreatedAsync(roleManager);
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -45,6 +52,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -52,3 +60,15 @@ app.MapControllerRoute(
     pattern: "{controller=Book}/{action=Index}/{id?}");
 
 app.Run();
+
+async Task EnsureRolesCreatedAsync(RoleManager<IdentityRole> roleManager)
+{
+    var roles = new[] { UserRoles.Admin, UserRoles.User };
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+}

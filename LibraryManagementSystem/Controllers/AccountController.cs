@@ -22,7 +22,7 @@ namespace LibraryManagementSystem.Controllers
         public IActionResult Login()
         {
             var response = new LoginViewModel();
-            return View();
+            return View(response);
         }
 
         [HttpPost]
@@ -52,6 +52,56 @@ namespace LibraryManagementSystem.Controllers
             //User not found
             TempData["Error"] = "Wrong credentials. Please try again";
             return View(loginViewModel);
+        }
+
+        public IActionResult Register()
+        {
+            var response = new RegisterViewModel();
+            return View(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        {
+            // user@gmail.com
+            // User1234!
+            // admin@gmail.com
+            // Admin1234! 
+
+            if (!ModelState.IsValid) return View(registerViewModel);
+
+            var user = await _userManager.FindByEmailAsync(registerViewModel.EmailAddress);
+            if (user != null)
+            {
+                TempData["Error"] = "This email address is already in use";
+                return View(registerViewModel);
+            }
+
+            var newUser = new AppUser()
+            {
+                Email = registerViewModel.EmailAddress,
+                UserName = registerViewModel.EmailAddress
+            };
+            var newUserResponse = await _userManager.CreateAsync(newUser, registerViewModel.Password);
+
+            if (!newUserResponse.Succeeded)
+            {
+                TempData["Error"] = newUserResponse.Errors.FirstOrDefault().Description;
+                return View(registerViewModel);
+            }
+            else
+            {
+                await _userManager.AddToRoleAsync(newUser, UserRoles.Admin);
+            }
+
+            return RedirectToAction("Index", "Book");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Book");
         }
     }
 }
